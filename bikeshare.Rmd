@@ -321,6 +321,7 @@ all_trips_v2 %>%
 
 Assuming that a casual user and a subscribed user have the same lifestyle and the only differentiator between these two groups is their behavior.  How might we increase the during-the-week usage of the casual user? Casual users have completed an average of 39.79 minutes (2387.60 secs) of rides every day for the previous 12 months. In comparison, member users rode on average 12.28 minutes (737.02 secs) every day during the last 12 months. 
 I recommend giving a discount on weekend rides when casual riders become a Cyclistic subscriber.  Casual users show a strong preference for docked and electric bikes over classic bikes.  We should remove any barriers that might prevent casual users from riding a docked or electric bicycle during the hours of 7 pm and 9 pm.  Casual riders must see the value of using the bike service outside of the weekend riding in the park.  I also would like to conduct interviews to gain a better understanding of the two groups and their motivations for using Cyclistic. 
+
 **How I grew as a data analyst?**
 Manipulating the datetime data in excel before bringing it into R made it easier to convert it to POSIXct. Working through errors and debugging code.
 
