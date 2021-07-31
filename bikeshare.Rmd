@@ -1,0 +1,326 @@
+---
+title: "bikesBehavior"
+author: "Stephen"
+date: "7/30/2021"
+output: html_document
+---
+## Cyclistic bike-share analysis case study
+How do annual members and casual riders use Cyclistic bikes differently?
+Introduction: 
+Cyclistic is fictional bicycle share company in Chicago. The company currently features 5,824 bicycles and 692 docking stations. Cyclistic sets itself apart by also offering reclining bikes, hand tricycles, and cargo bikes, making bike-share more inclusive to people with disabilities and riders who can’t use a standard two-wheeled bike. It has been determined that riders with a membership are more profitable for the business. The purpose of the case study is to analyze historical ride data to impact business tasks. The historical data will reveal the what and when but not the why.
+
+**Business task**
+For this scenario, the business task that will be impacted by the outcome of this analysis is as follows. 
+1. Increase profit. 
+2. Retain and attract new customers. 
+
+The license for the data can be found at the following link.https://www.divvybikes.com/data-license-agreement this data is for a fictional company.
+
+**Stakeholders**
+Lily Moreno:  director of marketing and my direct manager
+Cyclistic marketing analytics team: data analyst colleague  
+
+**What is the problem I am trying to solve?** 
+Cyclistic wants to convert its casual users to loyal members. The company needs to understand how these two groups of customers differ to create an effective marketing campaign to motivate casual customers to become lifelong members. 
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+### Ask
+The guiding question from the boss
+How do annual members and casual riders use Cyclistic bikes differently? 
+
+How often do customers use the bike sharing service?
+What is the total amount of rides per user type?
+Where do they go?
+Is there an advantage to being a member vs a casual user?
+Does a user type face any obstacles that are specific to that group?
+
+
+```{r setup}
+knitr::opts_chunk$set(include = FALSE)
+install.packages("tidyverse")
+library(tidyverse)
+library(lubridate)
+library(skimr)
+install.packages("janitor")
+library(janitor)
+library(dplyr)
+library(tidyr)
+library(ggplot2)
+
+
+```
+
+### Ask
+The guiding question from the boss
+How do annual members and casual riders use Cyclistic bikes differently? 
+
+How often do customers use the bike sharing service?
+What is the total amount of rides per user type?
+Where do they go?
+Is there an advantage to being a member vs a casual user?
+Does a user type face any obstacles that are specific to that group?
+
+```{r}
+#Upload Divvy datasets (csv files)
+May_2020 <- read.csv("202005_divvy_tripdata_rux.csv")
+Jun_2020 <- read.csv("202006_divvy_tripdata_rux.csv")
+Jul_2020 <- read.csv("202007_divvy_tripdata_rux.csv")
+Aug_2020 <- read.csv("202008_divvy_tripdata_rux.csv")
+Sep_2020 <- read.csv("202009_divvy_tripdata_rux.csv")
+Oct_2020 <- read.csv("202010_divvy_tripdata_rux.csv")
+Nov_2020 <- read.csv("202011_divvy_tripdata_rux.csv")
+Dec_2020 <- read.csv("202012_divvy_tripdata_rux.csv")
+Jan_2021 <- read.csv("202101_divvy_tripdata_rux.csv")
+Feb_2021 <- read.csv("202102_divvy_tripdata_rux.csv")
+Mar_2021 <- read.csv("202103_divvy_tripdata_rux.csv")
+Apr_2021 <- read.csv("202104_divvy_tripdata_rux.csv")
+```
+
+
+```{r}
+# Rename columns  to make them consistent
+May_2020 <- rename(May_2020,trip_id = ride_id
+                     ,bike_id = rideable_type
+                     ,start_time = started_at
+                     ,end_time = ended_at
+                     ,from_station_name = start_station_name
+                     ,from_station_id = start_station_id
+                     ,to_station_name = end_station_name
+                     ,to_station_id = end_station_id
+                     ,usertype = member_casual)
+
+Jun_2020 <- rename(Jun_2020,trip_id = ride_id
+                   ,bike_id = rideable_type
+                   ,start_time = started_at
+                   ,end_time = ended_at
+                   ,from_station_name = start_station_name
+                   ,from_station_id = start_station_id
+                   ,to_station_name = end_station_name
+                   ,to_station_id = end_station_id
+                   ,usertype = member_casual)
+
+Jul_2020 <- rename(Jul_2020,trip_id = ride_id
+                   ,bike_id = rideable_type
+                   ,start_time = started_at
+                   ,end_time = ended_at
+                   ,from_station_name = start_station_name
+                   ,from_station_id = start_station_id
+                   ,to_station_name = end_station_name
+                   ,to_station_id = end_station_id
+                   ,usertype = member_casual)
+
+Aug_2020 <- rename(Aug_2020,trip_id = ride_id
+                   ,bike_id = rideable_type
+                   ,start_time = started_at
+                   ,end_time = ended_at
+                   ,from_station_name = start_station_name
+                   ,from_station_id = start_station_id
+                   ,to_station_name = end_station_name
+                   ,to_station_id = end_station_id
+                   ,usertype = member_casual)
+
+Sep_2020 <- rename(Sep_2020,trip_id = ride_id
+                   ,bike_id = rideable_type
+                   ,start_time = started_at
+                   ,end_time = ended_at
+                   ,from_station_name = start_station_name
+                   ,from_station_id = start_station_id
+                   ,to_station_name = end_station_name
+                   ,to_station_id = end_station_id
+                   ,usertype = member_casual)
+
+Oct_2020 <- rename(Oct_2020,trip_id = ride_id
+                   ,bike_id = rideable_type
+                   ,start_time = started_at
+                   ,end_time = ended_at
+                   ,from_station_name = start_station_name
+                   ,from_station_id = start_station_id
+                   ,to_station_name = end_station_name
+                   ,to_station_id = end_station_id
+                   ,usertype = member_casual)
+
+Nov_2020 <- rename(Nov_2020,trip_id = ride_id
+                   ,bike_id = rideable_type
+                   ,start_time = started_at
+                   ,end_time = ended_at
+                   ,from_station_name = start_station_name
+                   ,from_station_id = start_station_id
+                   ,to_station_name = end_station_name
+                   ,to_station_id = end_station_id
+                   ,usertype = member_casual)
+
+Dec_2020 <- rename(Dec_2020,trip_id = ride_id
+                   ,bike_id = rideable_type
+                   ,start_time = started_at
+                   ,end_time = ended_at
+                   ,from_station_name = start_station_name
+                   ,from_station_id = start_station_id
+                   ,to_station_name = end_station_name
+                   ,to_station_id = end_station_id
+                   ,usertype = member_casual)
+
+Jan_2021 <- rename(Jan_2021,trip_id = ride_id
+                   ,bike_id = rideable_type
+                   ,start_time = started_at
+                   ,end_time = ended_at
+                   ,from_station_name = start_station_name
+                   ,from_station_id = start_station_id
+                   ,to_station_name = end_station_name
+                   ,to_station_id = end_station_id
+                   ,usertype = member_casual)
+
+Feb_2021 <- rename(Feb_2021,trip_id = ride_id
+                   ,bike_id = rideable_type
+                   ,start_time = started_at
+                   ,end_time = ended_at
+                   ,from_station_name = start_station_name
+                   ,from_station_id = start_station_id
+                   ,to_station_name = end_station_name
+                   ,to_station_id = end_station_id
+                   ,usertype = member_casual)
+
+Mar_2021 <- rename(Mar_2021,trip_id = ride_id
+                   ,bike_id = rideable_type
+                   ,start_time = started_at
+                   ,end_time = ended_at
+                   ,from_station_name = start_station_name
+                   ,from_station_id = start_station_id
+                   ,to_station_name = end_station_name
+                   ,to_station_id = end_station_id
+                   ,usertype = member_casual)
+
+Apr_2021 <- rename(Apr_2021,trip_id = ride_id
+                   ,bike_id = rideable_type
+                   ,start_time = started_at
+                   ,end_time = ended_at
+                   ,from_station_name = start_station_name
+                   ,from_station_id = start_station_id
+                   ,to_station_name = end_station_name
+                   ,to_station_id = end_station_id
+                   ,usertype = member_casual)
+
+
+```
+### Prepare
+
+We will be using the Divvy dataset for the case study. The purpose of this script is to consolidate downloaded Divvy data into a single dataframe and then conduct simple analysis to help answer the key question: “In what ways do members and casual riders use Divvy bikes differently?”
+The license for the data can be found at the following link. https://www.divvybikes.com/data-license-agreement this data is for a fictional company. This is public data that you can use to explore how different customer types are using Cyclistic bikes. But note that data-privacy issues prohibit you from using riders’ personally identifiable information. This means that you won’t be able to connect pass purchases to credit card numbers to determine if casual riders live in the Cyclistic service area or if they have purchased multiple single passes.
+
+The data is from an internal source, and I am making the assumption that it is reliable. 
+
+Importing data into R exam the data consistency and integrity ROCCC	
+I had to change the format for all the date time columns in excel before importing it to R.
+Using format cells Custom – m/d/yyyy h:mm:ss this made it easier to convert to POSIXct in R and perform calculations.
+
+```{r}
+#remove columns from all tables to make it easier to join and stack all tables
+May_2020 <- select(May_2020, -c(from_station_id, to_station_id))
+Jun_2020 <- select(Jun_2020, -c(from_station_id, to_station_id))
+Jul_2020 <- select(Jul_2020, -c(from_station_id, to_station_id))
+Aug_2020 <- select(Aug_2020, -c(from_station_id, to_station_id))
+Sep_2020 <- select(Sep_2020, -c(from_station_id, to_station_id))
+Oct_2020 <- select(Oct_2020, -c(from_station_id, to_station_id))
+Nov_2020 <- select(Nov_2020, -c(from_station_id, to_station_id))
+Dec_2020 <- select(Dec_2020, -c(from_station_id, to_station_id))
+Jan_2021 <- select(Jan_2021, -c(from_station_id, to_station_id))
+Feb_2021 <- select(Feb_2021, -c(from_station_id, to_station_id))
+Mar_2021 <- select(Mar_2021, -c(from_station_id, to_station_id))
+Apr_2021 <- select(Apr_2021, -c(from_station_id, to_station_id))
+
+```
+Data wrangling ensure columns have consistent data type before attempting to join data frames.
+```{r}
+#combine all tables into one by stacking
+all_trips<- bind_rows(May_2020,Jun_2020,Jul_2020, Aug_2020, Sep_2020, Oct_2020,
+                      Nov_2020, Dec_2020, Jan_2021, Feb_2021, Mar_2021, Apr_2021)
+```
+  
+```{r}
+#inspect the structure 
+str(all_trips)
+```
+
+```{r}
+all_trips$ride_length <- difftime(all_trips$end_time,all_trips$start_time)
+all_trips$date <- as_date(all_trips$start_time) #The default format is yyyy-mm-dd
+all_trips$month <- month(all_trips$date, label = TRUE)
+all_trips$day <- mday(all_trips$date)
+all_trips$year <- year(all_trips$date)
+all_trips$day_of_week <- wday(all_trips$date, label = TRUE, abbr = TRUE)
+```
+### Process
+
+Remove all negative ride time which caused from removing the bicycles for maintenance
+```{r}
+#remove bad data and stored the bad data just in case I need it later
+bad_ride_length <- subset(all_trips,ride_length < 0)
+all_trips_v2 <- subset(all_trips, ride_length > 0)
+```
+
+Now that the data is clean and in the correct format. The biggest issue was getting the start time and end time to the correct format. Compare how the two types of users use the Cyclistic bike share service and what patterns immerge. 
+```{r}
+#look for NULL values
+is.null(all_trips_v2$end_time)
+is.null(all_trips_v2$from_station_name)
+```
+
+```{r}
+#check for duplicate values 
+#nrow(distinct(all_trips_v2$trip_id))
+anyDuplicated(all_trips_v2)
+```
+### Analyze
+
+Now that the data is clean and in the correct format. The biggest issue was getting the start time and end time to the correct format. Compare how the two types of users use the Cyclistic bike share service and what patterns immerge. 
+```{r}
+# Descriptive analysis on ride_length (all figures in seconds)
+mean(all_trips_v2$ride_length) #straight average (total ride length / rides)
+median(all_trips_v2$ride_length) #midpoint number in the ascending array of ride lengths
+max(all_trips_v2$ride_length) #longest ride
+min(all_trips_v2$ride_length) #shortest ride
+```
+
+```{r}
+# Compare members and casual users
+aggregate(all_trips_v2$ride_length ~ all_trips_v2$usertype, FUN = mean)
+aggregate(all_trips_v2$ride_length ~ all_trips_v2$usertype, FUN = median)
+aggregate(all_trips_v2$ride_length ~ all_trips_v2$usertype, FUN = max)
+aggregate(all_trips_v2$ride_length ~ all_trips_v2$usertype, FUN = min)
+```
+
+```{r}
+# See the average ride time by each day for members vs casual users
+aggregate(all_trips_v2$ride_length ~ all_trips_v2$usertype + all_trips_v2$day_of_week, FUN = mean)
+
+# Now, let's run the average ride time by each day for members vs casual users
+aggregate(all_trips_v2$ride_length ~ all_trips_v2$usertype + all_trips_v2$day_of_week, FUN = mean)
+
+# analyze ridership data by type and weekday
+all_trips_v2 %>% 
+  mutate(weekday = wday(start_time, label = TRUE)) %>%  #creates weekday field using wday()
+  group_by(usertype, weekday) %>%  #groups by usertype and weekday
+  summarise(number_of_rides = n() ,average_duration = mean(ride_length)) %>% 
+  arrange(usertype, weekday)
+```
+### Share
+
+Here is a link to my data story in [Tableau story1]  (https://public.tableau.com/views/Thebikesharedatastory/Story1?:language=en-US&publish=yes&:display_count=n&:origin=viz_share_link) and [Tableau story2] (https://public.tableau.com/shared/YG3XQRMJQ?:display_count=n&:origin=viz_share_link)
+```{r}
+# Let's create a visualization for average duration
+all_trips_v2 %>% 
+  mutate(weekday = wday(start_time, label = TRUE)) %>% 
+  group_by(usertype, weekday) %>% 
+  summarise(number_of_rides = n(),average_duration = mean(ride_length)) %>% 
+  arrange(usertype, weekday)  %>% 
+  ggplot(aes(x = weekday, y = number_of_rides, fill = usertype)) +
+  geom_col(position = "dodge")
+```
+### Conclusion
+
+Assuming that a casual user and a subscribed user have the same lifestyle and the only differentiator between these two groups is their behavior.  How might we increase the during-the-week usage of the casual user? Casual users have completed an average of 39.79 minutes (2387.60 secs) of rides every day for the previous 12 months. In comparison, member users rode on average 12.28 minutes (737.02 secs) every day during the last 12 months. 
+I recommend giving a discount on weekend rides when casual riders become a Cyclistic subscriber.  Casual users show a strong preference for docked and electric bikes over classic bikes.  We should remove any barriers that might prevent casual users from riding a docked or electric bicycle during the hours of 7 pm and 9 pm.  Casual riders must see the value of using the bike service outside of the weekend riding in the park.  I also would like to conduct interviews to gain a better understanding of the two groups and their motivations for using Cyclistic. 
+**How I grew as a data analyst?**
+Manipulating the datetime data in excel before bringing it into R made it easier to convert it to POSIXct. Working through errors and debugging code.
+
